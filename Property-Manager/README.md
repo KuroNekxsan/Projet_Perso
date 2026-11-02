@@ -84,6 +84,3 @@ Situation Pro/
 
 ---
 
-## 👥 Auteur / Équipe
-**Jack Byszewski** – [À COMPLÉTER : ta part du projet, ex. « développement du serveur Node.js et des requêtes SQLite »]
-[À COMPLÉTER ou supprimer : noms des autres membres du groupe et leur rôle]
