@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hextech Challenges | League of Legends Dashboard</title>
+    
+    <!-- Meta SEO -->
+    <meta name="description" content="View and track your League of Legends challenges in real-time with the Riot Games API and our immersive Hextech dashboard.">
+    <meta name="keywords" content="League of Legends, LoL, Challenges, Riot API, Statistics, Summoner, Riot ID">
+    <meta name="author" content="Antigravity LoL Team">
+    
+    <!-- Google Fonts: Outfit (modern tech) and Cinzel (League fantasy vibe) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Top Navbar -->
+        <header class="top-navbar">
+            <div class="logo-section">
+                <nav class="page-navigation">
+                    <a href="index.html" class="page-nav-btn active"><i data-lucide="map"></i> Rift</a>
+                    <a href="aram.html" class="page-nav-btn"><i data-lucide="snowflake"></i> ARAM</a>
+                </nav>
+            </div>
+            
+            <div class="controls-section">
+                <!-- Quick Player Search -->
+                <div class="search-container">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" id="player-search-bar" class="search-input" placeholder="Riot ID (e.g., Faker#KR1)">
+                </div>
+                
+                <!-- Settings Button / API Key -->
+                <button id="btn-open-settings" class="btn-icon" title="Settings & Riot API Key">
+                    <i data-lucide="settings"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Notification Banner CORS/Mode -->
+        <div id="status-notification-banner" class="alert-box info">
+            <i data-lucide="info"></i>
+            <div>
+                <strong>Demo Mode Active:</strong> The data displayed below is simulated. 
+                Click the gear icon <i data-lucide="settings" style="width: 14px; height: 14px; display: inline; vertical-align: middle;"></i> to configure your Riot API key and load real game data.
+            </div>
+        </div>
+
+        <!-- Player Profile Section -->
+        <section id="player-profile-section" class="profile-card">
+            <div class="profile-info">
+                <h2>
+                    <span id="player-name-display">Imout</span>
+                    <span id="player-tag-display" class="profile-tag">#999</span>
+                    <span id="player-region-badge" class="profile-region">EUW</span>
+                    <span id="player-level-badge" class="profile-level-badge">Lvl 700</span>
+                    <span id="app-mode-badge" class="badge-mode">Demo</span>
+                </h2>
+                <div class="profile-summary-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Challenges Completed</span>
+                        <span id="stat-completed-count" class="stat-value">16 / 16</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Completion Rate</span>
+                        <span id="stat-completion-pct" class="stat-value">100%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-rank-display">
+                <div class="rank-crystal">
+                    <i data-lucide="gem"></i>
+                </div>
+                <div class="rank-details">
+                    <span class="stat-label">Global Challenge Rank</span>
+                    <span id="rank-tier-display" class="rank-tier-title" style="color: var(--tier-challenger);">Challenger</span>
+                    <span id="rank-points-display" class="rank-points">18,450 / 20,000 pts</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Grid Selector -->
+        <section class="categories-grid">
+            <div class="category-card active" data-category="ALL" id="cat-all">
+                <div class="category-icon"><i data-lucide="layout-grid"></i></div>
+                <div class="category-name">All Challenges</div>
+                <div class="category-tier" style="color: var(--gold-bright);">Global</div>
+                <div class="category-progress" id="progress-all">16 challenges</div>
+            </div>
+            <div class="category-card" data-category="EXPERTISE" id="cat-expertise">
+                <div class="category-icon"><i data-lucide="swords"></i></div>
+                <div class="category-name">Expertise</div>
+                <div class="category-tier" id="tier-expertise" style="color: var(--tier-challenger);">Challenger</div>
+                <div class="category-progress" id="progress-expertise">3,000 pts</div>
+            </div>
+            <div class="category-card" data-category="VETERANCY" id="cat-veterancy">
+                <div class="category-icon"><i data-lucide="hourglass"></i></div>
+                <div class="category-name">Veterancy</div>
+                <div class="category-tier" id="tier-veterancy" style="color: var(--tier-challenger);">Challenger</div>
+                <div class="category-progress" id="progress-veterancy">4,200 pts</div>
+            </div>
+            <div class="category-card" data-category="TEAMWORK" id="cat-teamwork">
+                <div class="category-icon"><i data-lucide="users"></i></div>
+                <div class="category-name">Teamwork</div>
+                <div class="category-tier" id="tier-teamwork" style="color: var(--tier-challenger);">Challenger</div>
+                <div class="category-progress" id="progress-teamwork">4,500 pts</div>
+            </div>
+            <div class="category-card" data-category="IMAGINATION" id="cat-imagination">
+                <div class="category-icon"><i data-lucide="lightbulb"></i></div>
+                <div class="category-name">Imagination</div>
+                <div class="category-tier" id="tier-imagination" style="color: var(--tier-master);">Master</div>
+                <div class="category-progress" id="progress-imagination">2,850 pts</div>
+            </div>
+            <div class="category-card" data-category="COLLECTION" id="cat-collection">
+                <div class="category-icon"><i data-lucide="archive"></i></div>
+                <div class="category-name">Collection</div>
+                <div class="category-tier" id="tier-collection" style="color: var(--tier-grandmaster);">Grandmaster</div>
+                <div class="category-progress" id="progress-collection">3,900 pts</div>
+            </div>
+        </section>
+
+        <!-- Challenges Section -->
+        <section class="challenges-section">
+            <div class="filters-bar">
+                <div class="tab-filters" id="tier-filters">
+                    <button class="filter-tab active" data-tier="ALL">All Tiers</button>
+                    <button class="filter-tab" data-tier="CHALLENGER">Challenger</button>
+                    <button class="filter-tab" data-tier="MASTER+">Master+</button>
+                    <button class="filter-tab" data-tier="DIAMOND">Diamond</button>
+                    <button class="filter-tab" data-tier="GOLD">Gold</button>
+                    <button class="filter-tab" data-tier="SILVER">Silver</button>
+                    <button class="filter-tab" data-tier="BRONZE/IRON">Bronze / Iron</button>
+                </div>
+                <div class="grid-layout-controls">
+                    <input type="text" id="challenge-search-input" class="search-input" placeholder="Filter by challenge name..." style="width: 220px; font-size: 0.85rem;">
+                </div>
+            </div>
+
+            <!-- Dynamically populated grid -->
+            <div id="challenges-display-grid" class="challenges-grid">
+                <!-- Dynamic render in Javascript -->
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Settings & API Modal Overlay -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="btn-close-settings" class="modal-close">&times;</button>
+            <h3 class="modal-title font-lol">Riot API Settings</h3>
+            
+            <div class="alert-box warning">
+                <i data-lucide="alert-triangle"></i>
+                <div>
+                    <strong>CORS Security:</strong> The Riot API blocks direct requests from web browsers. 
+                    If using a real key, use a <em>CORS Proxy</em> below, or disable CORS in your browser. Otherwise, <strong>Demo Mode</strong> will load mock data.
+                </div>
+            </div>
+
+            <form id="settings-form" onsubmit="event.preventDefault();">
+                <!-- Riot Games API Key -->
+                <div class="form-group">
+                    <label for="input-api-key">Riot Games API Key</label>
+                    <input type="password" id="input-api-key" placeholder="RGAPI-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX">
+                    <p class="helper-text">Get a free development key at the <a href="https://developer.riotgames.com/" target="_blank" style="color: var(--blue-bright);">Riot Developer Portal</a>.</p>
+                </div>
+
+                <!-- Player Name & Tagline -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="input-summoner-name">Player Name</label>
+                        <input type="text" id="input-summoner-name" placeholder="e.g. Faker" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-tagline">Tagline</label>
+                        <input type="text" id="input-tagline" placeholder="e.g. KR1" required>
+                        <p class="helper-text">The tagline after the # (without the #).</p>
+                    </div>
+                </div>
+
+                <!-- Platform & Routing -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="select-platform">Platform (Server)</label>
+                        <select id="select-platform">
+                            <option value="euw1">Europe West (EUW)</option>
+                            <option value="eun1">Europe Nordic & East (EUNE)</option>
+                            <option value="na1">North America (NA)</option>
+                            <option value="kr">Korea (KR)</option>
+                            <option value="br1">Brazil (BR)</option>
+                            <option value="la1">Latin America North (LAN)</option>
+                            <option value="la2">Latin America South (LAS)</option>
+                            <option value="oc1">Oceania (OCE)</option>
+                            <option value="tr1">Turkey (TR)</option>
+                            <option value="ru">Russia (RU)</option>
+                            <option value="jp1">Japan (JP)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="select-route">Routing Region</label>
+                        <select id="select-route">
+                            <option value="europe">Europe (for EUW, EUNE, TR, RU)</option>
+                            <option value="americas">Americas (for NA, BR, LAN, LAS, OCE)</option>
+                            <option value="asia">Asia (for KR, JP)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- CORS Proxy (Optional) -->
+                <div class="form-group">
+                    <label for="input-proxy-url">CORS Proxy (Optional)</label>
+                    <input type="text" id="input-proxy-url" placeholder="e.g. https://cors-anywhere.herokuapp.com/">
+                    <p class="helper-text">Proxy URL to add CORS headers. Leave blank if not used.</p>
+                </div>
+
+                <button type="submit" id="btn-save-settings" class="btn-primary">Save & Load</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Javascript Scripts -->
+    <script src="config.js"></script>
+    <script src="data-mock.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
